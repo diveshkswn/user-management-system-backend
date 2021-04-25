@@ -31,16 +31,17 @@ async function addUser(req, res) {
   }
 }
 
-async function deleteUser(req, res) {
+async function deleteUserById(req, res) {
   try {
-    const userID = req.params.id;
-    const responseData = await UserModel.find({ id: userID });
+    const userId = req.params.id;
+    const responseData = await UserModel.findOne({ id: userId });
     if (!responseData || responseData.length === 0) {
       res.status(404).json({
         status: false,
-        data: `User with id ${userID} not found`,
+        data: `User with id ${userId} not found`,
       });
     } else {
+      responseData.remove();
       res.status(201).json({
         success: 'true',
         data: responseData,
@@ -54,4 +55,31 @@ async function deleteUser(req, res) {
   }
 }
 
-module.exports = { getAllUsers, addUser, deleteUser };
+async function updateUserById(req, res) {
+  try {
+    const userId = req.params.id;
+    let responseData = await UserModel.findOne({ id: userId });
+    if (!responseData || responseData.length === 0) {
+      res.status(404).json({
+        status: false,
+        data: `User with id ${userId} not found`,
+      });
+    } else {
+      responseData = await UserModel.findOneAndUpdate({ id: userId }, req.body,
+        { new: true, runValidators: true });
+      res.status(201).json({
+        success: 'true',
+        data: responseData,
+      });
+    }
+  } catch (error) {
+    res.status(400).json({
+      success: 'false',
+      data: error,
+    });
+  }
+}
+
+module.exports = {
+  getAllUsers, addUser, deleteUserById, updateUserById,
+};
