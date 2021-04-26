@@ -8,6 +8,6 @@ const router = express.Router();
 router.route('/').get(userController.getAllUsers).post(userController.addUser);
 
 // /api/vi/users/:id
-router.route('/:id').delete(userController.deleteUserById).put(userController.updateUserById);
+router.route('/:id').get(userController.getUserById).delete(userController.deleteUserById).put(userController.updateUserById);
 
 module.exports = router;

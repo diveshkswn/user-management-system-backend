@@ -15,6 +15,21 @@ async function getAllUsers(req, res) {
   }
 }
 
+async function getUserById(req, res) {
+  try {
+    const userID = req.params.id;
+    const responseData = await UserModel.findOne({ id: userID });
+    res.status(201).json({
+      success: 'true',
+      data: responseData,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: 'false',
+      data: error,
+    });
+  }
+}
 async function addUser(req, res) {
   try {
     const responseData = await UserModel.create(req.body);
@@ -81,5 +96,5 @@ async function updateUserById(req, res) {
 }
 
 module.exports = {
-  getAllUsers, addUser, deleteUserById, updateUserById,
+  getAllUsers, getUserById, addUser, deleteUserById, updateUserById,
 };
